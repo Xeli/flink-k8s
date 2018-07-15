@@ -1,5 +1,30 @@
-# flink-k8s
+# Apache Flink on Kubernetes
 Simple example project to run Flink applications on Kubernetes
+
+
+## How does it work
+We have 3 kubernetes resources:
+ * A jobmanager service
+ * A jobmanager deployment
+ * A taskmanager deployment
+ 
+ ![flink-k8s-overview](k8s-overview.png)
+
+### Jobmanager service
+ The jobmanager service does nothing more than allowing us and the taskmanagers to find the jobmanager (think proxy).
+ 
+### Taskmanager 
+ The taskmanager deployment describes how a taskmanager looks, we can easily scale to multiple taskmanager this way using the [replicaset](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) functionality of kubernetes. It uses the `flink-base` docker image.
+
+### Jobmanager & Job starter
+ The jobmanager deployment has 2 containers.
+ * flink jobmanager
+ * job starter
+ 
+ The jobmanager container starts the flink cluster and all taskmanagers connect (via the service) to this container. It uses the `flink-base` docker image. 
+ 
+ The job starter container is only responsible for submitting the job. It uses a docker image based on the `flink-base` image but it also contains a jar with the flink job you want to run (generally this would contain your code). If you were to update your application you would only update this image (see [example-application](/docker/example-application))
+
 
 ## Building the docker images
 There are two docker images. [flink-base](/docker/flink-base) and [example-application](/docker/example-application). Because the example-application uses the flink-base image you might need to edit the [Dockerfile](/docker/example-application/Dockerfile) to point to the correct image.
@@ -33,7 +58,7 @@ docker push eu.gcr.io/my-google-project/example-application:1.0
 ```
 ## Kubernetes resource templates
 
-Depending on where you pushed the docker images to you might need to edit the templates. In case of the Google Cloud Platform example above I would have to change:
+Depending on where you pushed the docker images to you might need to edit the templates. In case of the Google Cloud Platform example I would have to change:
 
 ``` 
 image: example-application:1.0
