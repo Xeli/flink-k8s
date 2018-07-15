@@ -28,5 +28,3 @@ spec:
           name: ui
       - name: job-starter
         image: example-application:1.0
-        args:
-        - job-starter

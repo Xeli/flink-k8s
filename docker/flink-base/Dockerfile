@@ -6,3 +6,5 @@ COPY docker-entrypoint.sh /opt/
 RUN chmod +x /opt/docker-entrypoint.sh
 
 RUN chown flink:flink /opt/*
+
+ENTRYPOINT ["/opt/docker-entrypoint.sh"]

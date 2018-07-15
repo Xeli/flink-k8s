@@ -23,12 +23,6 @@ if [ "$1" = "jobmanager" ]; then
     echo "config file: " && grep '^[^\n#]' "$FLINK_HOME/conf/flink-conf.yaml"
 
     exec "$FLINK_HOME/bin/jobmanager.sh" start-foreground cluster
-elif [ "$1" = "job-start" ]; then
-    while [ "$(curl -s -o /dev/null -w '%{http_code}' localhost:8081/overview)" != "200" ]; do
-        echo "JobManager not yet up..."
-        sleep 1
-    done
-    exec "$FLINK_HOME/bin/flink" run /opt/deployable.jar
 elif [ "$1" = "taskmanager" ]; then
     TASK_MANAGER_NUMBER_OF_TASK_SLOTS=${TASK_MANAGER_NUMBER_OF_TASK_SLOTS:-$(grep -c ^processor /proc/cpuinfo)}
     sed -i -e "s/taskmanager.numberOfTaskSlots: 1/taskmanager.numberOfTaskSlots: $TASK_MANAGER_NUMBER_OF_TASK_SLOTS/g" "$FLINK_HOME/conf/flink-conf.yaml"
