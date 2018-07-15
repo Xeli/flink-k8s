@@ -30,13 +30,3 @@ spec:
         image: example-application:1.0
         args:
         - job-starter
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: /etc/google-application-credentials/credentials-flink.json
-        volumeMounts:
-            - name: google-application-credentials
-              mountPath: /etc/google-application-credentials
-      volumes:
-          - name: google-application-credentials
-            secret:
-              secretName: flink
