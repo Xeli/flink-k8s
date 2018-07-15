@@ -4,8 +4,8 @@ Simple example project to run Flink applications on Kubernetes
 
 ## How does it work
 We have 3 kubernetes resources:
- * A jobmanager service
- * A jobmanager deployment
+ * A service
+ * A flink-job deployment
  * A taskmanager deployment
  
  ![flink-k8s-overview](k8s-overview.png)
@@ -16,8 +16,8 @@ We have 3 kubernetes resources:
 ### Taskmanager 
  The taskmanager deployment describes how a taskmanager looks, we can easily scale to multiple taskmanager this way using the [replicaset](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/) functionality of kubernetes. It uses the `flink-base` docker image.
 
-### Jobmanager & Job starter
- The jobmanager deployment has 2 containers.
+### Flink-job
+ The flink-job deployment has 2 containers.
  * flink jobmanager
  * job starter
  
