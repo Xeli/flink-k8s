@@ -1,0 +1,42 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: flink-jobmanager
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flink
+        component: jobmanager
+    spec:
+      securityContext:
+        runAsUser: 9999
+      containers:
+      - name: jobmanager
+        image: example-application:1.0
+        args:
+        - jobmanager
+        ports:
+        - containerPort: 6123
+          name: rpc
+        - containerPort: 6124
+          name: blob
+        - containerPort: 6125
+          name: query
+        - containerPort: 8081
+          name: ui
+      - name: job-starter
+        image: example-application:1.0
+        args:
+        - job-starter
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/google-application-credentials/credentials-flink.json
+        volumeMounts:
+            - name: google-application-credentials
+              mountPath: /etc/google-application-credentials
+      volumes:
+          - name: google-application-credentials
+            secret:
+              secretName: flink
